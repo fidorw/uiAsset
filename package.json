@@ -1,0 +1,49 @@
+{
+  "name": "pubcore-ui-asset",
+  "version": "1.0.0",
+  "description": "map asset keys to resource definition or structure",
+  "main": "js/uiAsset.js",
+  "scripts": {
+    "test": "set NODE_ENV=dev && mocha --require @babel/register test/**/*.spec.js",
+    "test-with-coverage": "set NODE_ENV=dev && nyc --reporter=text mocha --require @babel/register test/**/*.spec.js",
+    "build": "babel src --out-dir js --ignore src/*.spec.js",
+    "pack": "npm run build && webpack --mode=production",
+    "prepublish": "npm run build"
+  },
+  "author": "",
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "deep-equal": "^1.0.1",
+    "pubcore-http": "^1.0.5",
+    "pubcore-ui-resource": "git+https://github.com/fidorw/uiResource.git"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "fakexmlhttprequest": "0.0.1",
+    "mocha": "^5.1.1",
+    "nyc": "^14.1.0",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread"
+    ]
+  }
+}
