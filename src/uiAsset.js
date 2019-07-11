@@ -1,31 +1,30 @@
+import http from 'pubcore-http'
 import {validateKey,envIsDev} from 'pubcore-ui-resource'
-import getDefault from './getDefault'
+import getAssetUri from './getAssetUri'
 import uiAsset from './uiAsset'
 
+//only fol default not for A
 var htdocs
 
 export {initEnvIsDev,initDefaults,initAutoupdateDefaults} from 'pubcore-ui-resource'
-export const initHtdocsDefaultPath = htdocsDefaultPath => (htdocsDefaultPath = htdocs)
+export const initHtdocsDefaultPath = htdocsDefaultPath => (htdocs = htdocsDefaultPath)
 export const uiAssetOptional = (A, key, def) => uiAsset(A, key, def, true)
+
 export default (A, key, def, optional) => {
-
-	var uri
-	var optional = typeof optional === 'undefined' || optional == false ? false : true
-	var validated = validateKey({
-		R: A,
-		key: Array.isArray(key) ? key[0] : key,
-		def: getDefault(htdocs,key,def,optional),
-		isDev: envIsDev()
-	})
-
-	validated.value && typeof validated.value.uri === 'string' && (uri = validated.value.uri)
-	typeof uri === 'undefined' && optional && (uri = '')
-
+	var uri = getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional})
 	if (envIsDev()) {
 		//TODO check for physical file persistance validated.def.uri
 		//TODO check for physical file persistance validated.value.uri if not undefined
-		typeof uri === 'undefined' && (uri = validated.def.uri)
-	}
+		http(uri, null, 'GET').then(
+	    response => {
+				return uri
+			},
+	    error => {
+				throw 'ERROR_ASSET_NOT_EXISTS '+uri
+				return uri
+		})
 
-	return uri
+	} else {
+		return uri
+	}
 }

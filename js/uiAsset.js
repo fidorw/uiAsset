@@ -23,18 +23,21 @@ Object.defineProperty(exports, "initAutoupdateDefaults", {
 });
 exports["default"] = exports.uiAssetOptional = exports.initHtdocsDefaultPath = void 0;
 
+var _pubcoreHttp = _interopRequireDefault(require("pubcore-http"));
+
 var _pubcoreUiResource = require("pubcore-ui-resource");
 
-var _getDefault = _interopRequireDefault(require("./getDefault"));
+var _getAssetUri = _interopRequireDefault(require("./getAssetUri"));
 
 var _uiAsset = _interopRequireDefault(require("./uiAsset"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+//only fol default not for A
 var htdocs;
 
 var initHtdocsDefaultPath = function initHtdocsDefaultPath(htdocsDefaultPath) {
-  return htdocsDefaultPath = htdocs;
+  return htdocs = htdocsDefaultPath;
 };
 
 exports.initHtdocsDefaultPath = initHtdocsDefaultPath;
@@ -46,24 +49,27 @@ var uiAssetOptional = function uiAssetOptional(A, key, def) {
 exports.uiAssetOptional = uiAssetOptional;
 
 var _default = function _default(A, key, def, optional) {
-  var uri;
-  var optional = typeof optional === 'undefined' || optional == false ? false : true;
-  var validated = (0, _pubcoreUiResource.validateKey)({
-    R: A,
-    key: Array.isArray(key) ? key[0] : key,
-    def: (0, _getDefault["default"])(htdocs, key, def, optional),
-    isDev: (0, _pubcoreUiResource.envIsDev)()
+  var uri = (0, _getAssetUri["default"])({
+    A: A,
+    key: key,
+    def: def,
+    isDev: (0, _pubcoreUiResource.envIsDev)(),
+    htdocs: htdocs,
+    optional: optional
   });
-  validated.value && typeof validated.value.uri === 'string' && (uri = validated.value.uri);
-  typeof uri === 'undefined' && optional && (uri = '');
 
   if ((0, _pubcoreUiResource.envIsDev)()) {
     //TODO check for physical file persistance validated.def.uri
     //TODO check for physical file persistance validated.value.uri if not undefined
-    typeof uri === 'undefined' && (uri = validated.def.uri);
+    (0, _pubcoreHttp["default"])(uri, null, 'GET').then(function (response) {
+      return uri;
+    }, function (error) {
+      throw 'ERROR_ASSET_NOT_EXISTS ' + uri;
+      return uri;
+    });
+  } else {
+    return uri;
   }
-
-  return uri;
 };
 
 exports["default"] = _default;
