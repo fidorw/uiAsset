@@ -9,19 +9,7 @@ Object.defineProperty(exports, "initEnvIsDev", {
     return _pubcoreUiResource.initEnvIsDev;
   }
 });
-Object.defineProperty(exports, "initDefaults", {
-  enumerable: true,
-  get: function get() {
-    return _pubcoreUiResource.initDefaults;
-  }
-});
-Object.defineProperty(exports, "initAutoupdateDefaults", {
-  enumerable: true,
-  get: function get() {
-    return _pubcoreUiResource.initAutoupdateDefaults;
-  }
-});
-exports["default"] = exports.uiAssetOptional = exports.initHtdocsDefaultPath = void 0;
+exports["default"] = exports.initAutoupdateAssetDefaults = exports.initAssetDefaults = exports.uiAssetOptional = exports.initHtdocsDefaultPath = void 0;
 
 var _pubcoreHttp = _interopRequireDefault(require("pubcore-http"));
 
@@ -48,6 +36,18 @@ var uiAssetOptional = function uiAssetOptional(A, key, def) {
 
 exports.uiAssetOptional = uiAssetOptional;
 
+var initAssetDefaults = function initAssetDefaults(defaults) {
+  (0, _pubcoreUiResource.initDefaults)(defaults, 'asset');
+};
+
+exports.initAssetDefaults = initAssetDefaults;
+
+var initAutoupdateAssetDefaults = function initAutoupdateAssetDefaults(c) {
+  (0, _pubcoreUiResource.initAutoupdateDefaults)(c, 'asset');
+};
+
+exports.initAutoupdateAssetDefaults = initAutoupdateAssetDefaults;
+
 var _default = function _default(A, key, def, optional) {
   var uri = (0, _getAssetUri["default"])({
     A: A,
@@ -64,7 +64,7 @@ var _default = function _default(A, key, def, optional) {
     (0, _pubcoreHttp["default"])(uri, null, 'GET').then(function (response) {
       return uri;
     }, function (error) {
-      throw 'ERROR_ASSET_NOT_EXISTS ' + uri;
+      //throw 'ERROR_ASSET_NOT_EXISTS '+uri
       return uri;
     });
   } else {

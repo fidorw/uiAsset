@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 import FakeXMLHTTPRequests from 'fakexmlhttprequest'
-import uiAsset, {uiAssetOptional,initEnvIsDev,initDefaults,initAutoupdateDefaults,initHtdocsDefaultPath} from '../src/uiAsset'
+import uiAsset, {uiAssetOptional,initEnvIsDev,initAssetDefaults,initAutoupdateAssetDefaults,initHtdocsDefaultPath} from '../src/uiAsset'
 
 var requests = []
 global.XMLHttpRequest = function() {
@@ -18,6 +18,13 @@ describe('uiAsset, ' + new Date(), () => {
 	it('get undefined asset uri not in dev mode because asset0 is not configured', () => {
 		initEnvIsDev(false)
 		expect(uiAsset({},'a0')).to.deep.equal(undefined)
+	})
+
+	it('initAssetDefaults()', () => {
+		initAssetDefaults({})
+	})
+	it('initAutoupdateAssetDefaults()', () => {
+		initAutoupdateAssetDefaults({})
 	})
 
 	// it('get undefined asset uri in dev mode because asset0 is not configured', (done) => {

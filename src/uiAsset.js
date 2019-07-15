@@ -1,14 +1,20 @@
 import http from 'pubcore-http'
-import {validateKey,envIsDev} from 'pubcore-ui-resource'
+import {envIsDev,initDefaults,initAutoupdateDefaults} from 'pubcore-ui-resource'
 import getAssetUri from './getAssetUri'
 import uiAsset from './uiAsset'
 
 //only fol default not for A
 var htdocs
 
-export {initEnvIsDev,initDefaults,initAutoupdateDefaults} from 'pubcore-ui-resource'
+export {initEnvIsDev} from 'pubcore-ui-resource'
 export const initHtdocsDefaultPath = htdocsDefaultPath => (htdocs = htdocsDefaultPath)
 export const uiAssetOptional = (A, key, def) => uiAsset(A, key, def, true)
+export const initAssetDefaults = defaults => {
+	initDefaults(defaults,'asset')
+}
+export const initAutoupdateAssetDefaults = c => {
+	initAutoupdateDefaults(c,'asset')
+}
 
 export default (A, key, def, optional) => {
 	var uri = getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional})
@@ -20,7 +26,7 @@ export default (A, key, def, optional) => {
 				return uri
 			},
 	    error => {
-				throw 'ERROR_ASSET_NOT_EXISTS '+uri
+				//throw 'ERROR_ASSET_NOT_EXISTS '+uri
 				return uri
 		})
 
