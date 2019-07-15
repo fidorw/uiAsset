@@ -9,7 +9,7 @@ export default ({A, key, def, isDev, htdocs, optional}) => {
 		key: Array.isArray(key) ? key[0] : key,
 		def: getDefault(htdocs,key,def,optional),
 		isDev: isDev,
-		ctx: 'a'
+		ctx: 'asset'
 	})
 	validated.value && typeof validated.value.uri === 'string' && (uri = validated.value.uri)
 	typeof uri === 'undefined' && optional && (uri = '')

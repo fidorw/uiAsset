@@ -25,7 +25,7 @@ var _default = function _default(_ref) {
     key: Array.isArray(key) ? key[0] : key,
     def: (0, _getDefault["default"])(htdocs, key, def, optional),
     isDev: isDev,
-    ctx: 'a'
+    ctx: 'asset'
   });
   validated.value && typeof validated.value.uri === 'string' && (uri = validated.value.uri);
   typeof uri === 'undefined' && optional && (uri = '');
