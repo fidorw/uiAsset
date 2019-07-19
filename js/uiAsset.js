@@ -11,7 +11,9 @@ Object.defineProperty(exports, "initEnvIsDev", {
 });
 exports["default"] = exports.initAutoupdateAssetDefaults = exports.initAssetDefaults = exports.uiAssetOptional = exports.initHtdocsDefaultPath = void 0;
 
-var _pubcoreHttp = _interopRequireDefault(require("pubcore-http"));
+var _httpClient = _interopRequireDefault(require("@pubcore/http-client"));
+
+var _https = _interopRequireDefault(require("https"));
 
 var _pubcoreUiResource = require("pubcore-ui-resource");
 
@@ -48,7 +50,7 @@ var initAutoupdateAssetDefaults = function initAutoupdateAssetDefaults(c) {
 
 exports.initAutoupdateAssetDefaults = initAutoupdateAssetDefaults;
 
-var _default = function _default(A, key, def, optional) {
+var _default = function _default(A, key, def, optional, host) {
   var uri = (0, _getAssetUri["default"])({
     A: A,
     key: key,
@@ -59,17 +61,20 @@ var _default = function _default(A, key, def, optional) {
   });
 
   if ((0, _pubcoreUiResource.envIsDev)()) {
-    //TODO check for physical file persistance validated.def.uri
-    //TODO check for physical file persistance validated.value.uri if not undefined
-    (0, _pubcoreHttp["default"])(uri, null, 'GET').then(function (response) {
-      return uri;
-    }, function (error) {
-      //throw 'ERROR_ASSET_NOT_EXISTS '+uri
-      return uri;
+    var agent = new _https["default"].Agent({
+      rejectUnauthorized: false
     });
-  } else {
-    return uri;
+    (0, _httpClient["default"])({
+      uri: 'https://' + (host || window.location.host) + uri,
+      httpsAgent: agent
+    }).then(function (response) {
+      if (response.status != 200) throw 'ERROR_ASSET_NOT_FOUND ' + uri;
+    }, function (error) {
+      throw error;
+    });
   }
+
+  return uri;
 };
 
 exports["default"] = _default;

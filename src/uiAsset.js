@@ -1,4 +1,5 @@
-import http from 'pubcore-http'
+import request from '@pubcore/http-client'
+import https from 'https'
 import {envIsDev,initDefaults,initAutoupdateDefaults} from 'pubcore-ui-resource'
 import getAssetUri from './getAssetUri'
 import uiAsset from './uiAsset'
@@ -16,21 +17,20 @@ export const initAutoupdateAssetDefaults = c => {
 	initAutoupdateDefaults(c,'asset')
 }
 
-export default (A, key, def, optional) => {
+export default (A, key, def, optional, host) => {
 	var uri = getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional})
 	if (envIsDev()) {
-		//TODO check for physical file persistance validated.def.uri
-		//TODO check for physical file persistance validated.value.uri if not undefined
-		http(uri, null, 'GET').then(
+		const agent = new https.Agent({
+		  rejectUnauthorized: false
+		})
+		request({uri:'https://' + (host || window.location.host) + uri, httpsAgent: agent}).then(
 	    response => {
-				return uri
+				if (response.status != 200) throw('ERROR_ASSET_NOT_FOUND '+uri)
 			},
 	    error => {
-				//throw 'ERROR_ASSET_NOT_EXISTS '+uri
-				return uri
+				throw(error)
 		})
 
-	} else {
-		return uri
 	}
+	return uri
 }
