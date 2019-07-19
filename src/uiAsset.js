@@ -18,8 +18,8 @@ export const initAutoupdateAssetDefaults = c => {
 }
 
 export default (A, key, def, optional, host) => {
-	var uri = getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional})
 	if (envIsDev()) {
+		var uri = getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional, autoupdateOff:true})
 		const agent = new https.Agent({
 		  rejectUnauthorized: false
 		})
@@ -28,9 +28,9 @@ export default (A, key, def, optional, host) => {
 				if (response.status != 200) throw('ERROR_ASSET_NOT_FOUND '+uri)
 			},
 	    error => {
-				throw(error)
+				throw('ERROR_ASSET_NOT_FOUND '+uri)
 		})
 
 	}
-	return uri
+	return getAssetUri({A, key, def, isDev:envIsDev(), htdocs, optional})
 }

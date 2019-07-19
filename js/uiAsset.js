@@ -51,16 +51,16 @@ var initAutoupdateAssetDefaults = function initAutoupdateAssetDefaults(c) {
 exports.initAutoupdateAssetDefaults = initAutoupdateAssetDefaults;
 
 var _default = function _default(A, key, def, optional, host) {
-  var uri = (0, _getAssetUri["default"])({
-    A: A,
-    key: key,
-    def: def,
-    isDev: (0, _pubcoreUiResource.envIsDev)(),
-    htdocs: htdocs,
-    optional: optional
-  });
-
   if ((0, _pubcoreUiResource.envIsDev)()) {
+    var uri = (0, _getAssetUri["default"])({
+      A: A,
+      key: key,
+      def: def,
+      isDev: (0, _pubcoreUiResource.envIsDev)(),
+      htdocs: htdocs,
+      optional: optional,
+      autoupdateOff: true
+    });
     var agent = new _https["default"].Agent({
       rejectUnauthorized: false
     });
@@ -70,11 +70,18 @@ var _default = function _default(A, key, def, optional, host) {
     }).then(function (response) {
       if (response.status != 200) throw 'ERROR_ASSET_NOT_FOUND ' + uri;
     }, function (error) {
-      throw error;
+      throw 'ERROR_ASSET_NOT_FOUND ' + uri;
     });
   }
 
-  return uri;
+  return (0, _getAssetUri["default"])({
+    A: A,
+    key: key,
+    def: def,
+    isDev: (0, _pubcoreUiResource.envIsDev)(),
+    htdocs: htdocs,
+    optional: optional
+  });
 };
 
 exports["default"] = _default;
